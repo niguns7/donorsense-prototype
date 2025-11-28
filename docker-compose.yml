@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  donorsense-app:
+    container_name: donorsense-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    networks:
+      - donorsense-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Nginx reverse proxy (uncomment if you want to include nginx in docker-compose)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: donorsense-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - donorsense-app
+  #   networks:
+  #     - donorsense-network
+
+networks:
+  donorsense-network:
+    driver: bridge
