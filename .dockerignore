@@ -3,7 +3,7 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
+# Do not exclude package-lock.json - needed for Docker build
 yarn.lock
 pnpm-lock.yaml
 
