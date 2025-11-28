@@ -1,0 +1,62 @@
+[
+  {
+    "id": "CAMP-001",
+    "name": "Education for All",
+    "description": "Providing quality education to underprivileged children",
+    "goal": 50000,
+    "raised": 32500,
+    "donors": 145,
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31",
+    "status": "Active",
+    "category": "Education"
+  },
+  {
+    "id": "CAMP-002",
+    "name": "Clean Water Initiative",
+    "description": "Building water wells in rural communities",
+    "goal": 75000,
+    "raised": 58200,
+    "donors": 98,
+    "startDate": "2025-03-01",
+    "endDate": "2025-12-31",
+    "status": "Active",
+    "category": "Infrastructure"
+  },
+  {
+    "id": "CAMP-003",
+    "name": "Healthcare Fund",
+    "description": "Medical supplies and support for communities in need",
+    "goal": 40000,
+    "raised": 28750,
+    "donors": 76,
+    "startDate": "2025-02-15",
+    "endDate": "2025-11-30",
+    "status": "Active",
+    "category": "Healthcare"
+  },
+  {
+    "id": "CAMP-004",
+    "name": "Emergency Relief",
+    "description": "Rapid response fund for natural disasters",
+    "goal": 100000,
+    "raised": 45600,
+    "donors": 203,
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31",
+    "status": "Active",
+    "category": "Emergency"
+  },
+  {
+    "id": "CAMP-005",
+    "name": "Youth Development",
+    "description": "Skills training and mentorship programs",
+    "goal": 30000,
+    "raised": 22400,
+    "donors": 54,
+    "startDate": "2025-04-01",
+    "endDate": "2025-12-31",
+    "status": "Active",
+    "category": "Youth"
+  }
+]

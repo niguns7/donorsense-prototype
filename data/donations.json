@@ -1,0 +1,131 @@
+[
+  {
+    "id": "DON-001",
+    "donor": {
+      "name": "Sarah Johnson",
+      "email": "sarah.j@email.com",
+      "phone": "+1 (555) 123-4567"
+    },
+    "campaign": {
+      "id": "CAMP-001",
+      "name": "Education for All"
+    },
+    "amount": 500,
+    "currency": "USD",
+    "type": "One-time",
+    "method": "Credit Card",
+    "status": "Completed",
+    "date": "2025-11-28T10:30:00Z",
+    "transactionId": "TXN-789456123",
+    "receipt": "RCP-001-2025",
+    "notes": "Corporate matching gift eligible"
+  },
+  {
+    "id": "DON-002",
+    "donor": {
+      "name": "Michael Chen",
+      "email": "m.chen@email.com",
+      "phone": "+1 (555) 234-5678"
+    },
+    "campaign": {
+      "id": "CAMP-002",
+      "name": "Clean Water Initiative"
+    },
+    "amount": 1000,
+    "currency": "USD",
+    "type": "Recurring",
+    "frequency": "Monthly",
+    "method": "Bank Transfer",
+    "status": "Active",
+    "date": "2025-11-27T14:20:00Z",
+    "transactionId": "TXN-789456124",
+    "receipt": "RCP-002-2025",
+    "notes": "Monthly subscription started"
+  },
+  {
+    "id": "DON-003",
+    "donor": {
+      "name": "Emily Rodriguez",
+      "email": "emily.r@email.com",
+      "phone": "+1 (555) 345-6789"
+    },
+    "campaign": {
+      "id": "CAMP-003",
+      "name": "Healthcare Fund"
+    },
+    "amount": 250,
+    "currency": "USD",
+    "type": "One-time",
+    "method": "Cheque",
+    "status": "Processing",
+    "date": "2025-11-27T09:15:00Z",
+    "transactionId": "TXN-789456125",
+    "receipt": "RCP-003-2025",
+    "checkNumber": "CHK-12345",
+    "notes": "Uploaded via OCR"
+  },
+  {
+    "id": "DON-004",
+    "donor": {
+      "name": "David Thompson",
+      "email": "d.thompson@email.com",
+      "phone": "+1 (555) 456-7890"
+    },
+    "campaign": {
+      "id": "CAMP-001",
+      "name": "Education for All"
+    },
+    "amount": 750,
+    "currency": "USD",
+    "type": "One-time",
+    "method": "PayPal",
+    "status": "Completed",
+    "date": "2025-11-26T16:45:00Z",
+    "transactionId": "TXN-789456126",
+    "receipt": "RCP-004-2025",
+    "notes": ""
+  },
+  {
+    "id": "DON-005",
+    "donor": {
+      "name": "Lisa Martinez",
+      "email": "lisa.m@email.com",
+      "phone": "+1 (555) 567-8901"
+    },
+    "campaign": {
+      "id": "CAMP-004",
+      "name": "Emergency Relief"
+    },
+    "amount": 2000,
+    "currency": "USD",
+    "type": "One-time",
+    "method": "Credit Card",
+    "status": "Completed",
+    "date": "2025-11-26T11:20:00Z",
+    "transactionId": "TXN-789456127",
+    "receipt": "RCP-005-2025",
+    "notes": "Major donor"
+  },
+  {
+    "id": "DON-006",
+    "donor": {
+      "name": "James Wilson",
+      "email": "j.wilson@email.com",
+      "phone": "+1 (555) 678-9012"
+    },
+    "campaign": {
+      "id": "CAMP-002",
+      "name": "Clean Water Initiative"
+    },
+    "amount": 150,
+    "currency": "USD",
+    "type": "Recurring",
+    "frequency": "Quarterly",
+    "method": "Credit Card",
+    "status": "Active",
+    "date": "2025-11-25T13:30:00Z",
+    "transactionId": "TXN-789456128",
+    "receipt": "RCP-006-2025",
+    "notes": ""
+  }
+]

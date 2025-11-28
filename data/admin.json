@@ -1,0 +1,14 @@
+{
+  "revenue": {
+    "mrr": 45000,
+    "arr": 540000,
+    "ltv": 12500,
+    "churn": 2.3
+  },
+  "systemHealth": {
+    "apiStatus": "operational",
+    "latency": 145,
+    "errorRate": 0.02,
+    "uptime": 99.98
+  }
+}
