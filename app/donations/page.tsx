@@ -19,7 +19,16 @@ import {
   ExternalLink,
   CheckCircle2,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Globe,
+  CreditCard,
+  Target,
+  Receipt,
+  Building2,
+  Mail,
+  Phone,
+  Calendar,
+  Hash
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -70,6 +79,9 @@ export default function DonationsPage() {
   const [campaignFilter, setCampaignFilter] = useState<string>('all')
   const [dateFilter, setDateFilter] = useState<string>('all')
   const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null)
+  const [selectedCampaignDetail, setSelectedCampaignDetail] = useState<Campaign | null>(null)
+  const [selectedReceipt, setSelectedReceipt] = useState<Donation | null>(null)
+  const [activeTab, setActiveTab] = useState<'online' | 'offline' | 'ad-campaign' | 'external'>('online')
 
   const donations: Donation[] = donationsData as Donation[]
   const campaigns: Campaign[] = campaignsData as Campaign[]
@@ -347,26 +359,29 @@ export default function DonationsPage() {
         </Card>
       </div>
 
-      {/* Active Campaigns Grid */}
+      {/* Active Donations Grid */}
       <Card className="mb-6">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Active Campaigns</CardTitle>
-              <CardDescription>View details and manage your campaigns</CardDescription>
+              <CardTitle>Active Donations</CardTitle>
+              <CardDescription>View all donation sources and their details</CardDescription>
             </div>
             <Link href="/campaigns">
               <Button variant="outline" size="sm">
                 <ExternalLink className="w-4 h-4" />
-                View All
+                View All Campaigns
               </Button>
             </Link>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {campaigns.filter(c => c.status === 'Active').map((campaign, index) => {
+            {campaigns.map((campaign, index) => {
               const percentage = (campaign.raised / campaign.goal) * 100
+              const campaignDonations = donations.filter(d => d.campaign.id === campaign.id && d.status === 'Completed')
+              const totalDonated = campaignDonations.reduce((sum, d) => sum + d.amount, 0)
+              
               return (
                 <motion.div
                   key={campaign.id}
@@ -403,20 +418,25 @@ export default function DonationsPage() {
                         <div className="flex justify-between items-end">
                           <div>
                             <p className="text-lg font-bold text-[#1A1A1A]">
-                              ${campaign.raised.toLocaleString()}
+                              ${totalDonated.toLocaleString()}
                             </p>
                             <p className="text-xs text-[#6B6B6B]">
                               of ${campaign.goal.toLocaleString()}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm font-semibold text-[#6A5ACD]">{campaign.donors}</p>
-                            <p className="text-xs text-[#6B6B6B]">donors</p>
+                            <p className="text-sm font-semibold text-[#6A5ACD]">{campaignDonations.length}</p>
+                            <p className="text-xs text-[#6B6B6B]">donations</p>
                           </div>
                         </div>
                       </div>
 
-                      <Button variant="outline" size="sm" className="w-full mt-4">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full mt-4"
+                        onClick={() => setSelectedCampaignDetail(campaign)}
+                      >
                         <Eye className="w-4 h-4" />
                         View Details
                       </Button>
@@ -722,6 +742,542 @@ export default function DonationsPage() {
                   <Edit className="w-4 h-4" />
                   Edit Donation
                 </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Campaign Detail Modal */}
+      {selectedCampaignDetail && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
+          onClick={() => setSelectedCampaignDetail(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            className="bg-white rounded-2xl max-w-6xl w-full my-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-[#1A1A1A] mb-1">{selectedCampaignDetail.name}</h2>
+                  <p className="text-[#6B6B6B]">{selectedCampaignDetail.description}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedCampaignDetail(null)}
+                  className="text-[#6B6B6B] hover:text-[#1A1A1A] text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {/* Campaign Stats */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <Card className="border-l-4 border-l-[#6A5ACD]">
+                  <CardContent className="p-4">
+                    <DollarSign className="w-5 h-5 text-[#6A5ACD] mb-2" />
+                    <p className="text-xl font-bold text-[#1A1A1A]">
+                      ${selectedCampaignDetail.raised.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-[#6B6B6B]">Total Raised</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-[#4ADE80]">
+                  <CardContent className="p-4">
+                    <Target className="w-5 h-5 text-[#4ADE80] mb-2" />
+                    <p className="text-xl font-bold text-[#1A1A1A]">
+                      ${selectedCampaignDetail.goal.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-[#6B6B6B]">Goal</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-[#9B87FF]">
+                  <CardContent className="p-4">
+                    <Users className="w-5 h-5 text-[#9B87FF] mb-2" />
+                    <p className="text-xl font-bold text-[#1A1A1A]">
+                      {donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.status === 'Completed').length}
+                    </p>
+                    <p className="text-xs text-[#6B6B6B]">Donations</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-[#FFA500]">
+                  <CardContent className="p-4">
+                    <TrendingUp className="w-5 h-5 text-[#FFA500] mb-2" />
+                    <p className="text-xl font-bold text-[#1A1A1A]">
+                      {((selectedCampaignDetail.raised / selectedCampaignDetail.goal) * 100).toFixed(0)}%
+                    </p>
+                    <p className="text-xs text-[#6B6B6B]">Progress</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Donation Type Tabs */}
+              <div className="mb-6">
+                <div className="flex gap-2 border-b border-gray-200">
+                  <button
+                    onClick={() => setActiveTab('online')}
+                    className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
+                      activeTab === 'online'
+                        ? 'border-[#6A5ACD] text-[#6A5ACD]'
+                        : 'border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-4 h-4" />
+                      Online Donations
+                      <span className="px-2 py-0.5 rounded-full bg-[#6A5ACD]/10 text-[#6A5ACD] text-xs">
+                        {donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Online').length}
+                      </span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('offline')}
+                    className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
+                      activeTab === 'offline'
+                        ? 'border-[#6A5ACD] text-[#6A5ACD]'
+                        : 'border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4" />
+                      Offline Donations
+                      <span className="px-2 py-0.5 rounded-full bg-[#6A5ACD]/10 text-[#6A5ACD] text-xs">
+                        {donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Offline').length}
+                      </span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('ad-campaign')}
+                    className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
+                      activeTab === 'ad-campaign'
+                        ? 'border-[#6A5ACD] text-[#6A5ACD]'
+                        : 'border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Target className="w-4 h-4" />
+                      Ad Campaign
+                      <span className="px-2 py-0.5 rounded-full bg-[#6A5ACD]/10 text-[#6A5ACD] text-xs">
+                        {donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Ad Campaign').length}
+                      </span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('external')}
+                    className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
+                      activeTab === 'external'
+                        ? 'border-[#6A5ACD] text-[#6A5ACD]'
+                        : 'border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Globe className="w-4 h-4" />
+                      External Website
+                      <span className="px-2 py-0.5 rounded-full bg-[#6A5ACD]/10 text-[#6A5ACD] text-xs">
+                        {donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'External').length}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Donation Type Details */}
+              <div className="mb-6">
+                {activeTab === 'online' && (
+                  <Card className="bg-gradient-to-br from-[#6A5ACD]/5 to-transparent">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#6A5ACD] flex items-center justify-center">
+                          <CreditCard className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1A1A1A]">Online Donations</h3>
+                          <p className="text-sm text-[#6B6B6B]">Payments through website donation forms</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Total Amount</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">
+                            ${donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Online' && d.status === 'Completed')
+                              .reduce((sum, d) => sum + d.amount, 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Avg. Donation</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">
+                            ${(donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Online' && d.status === 'Completed')
+                              .reduce((sum, d) => sum + d.amount, 0) / 
+                              Math.max(donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Online').length, 1)).toFixed(0)}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Payment Methods</p>
+                          <p className="text-sm font-medium text-[#1A1A1A]">Card, Bank Transfer</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {activeTab === 'offline' && (
+                  <Card className="bg-gradient-to-br from-[#4ADE80]/5 to-transparent">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#4ADE80] flex items-center justify-center">
+                          <Building2 className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1A1A1A]">Offline Donations</h3>
+                          <p className="text-sm text-[#6B6B6B]">Cash, check, and in-person donations</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Total Amount</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">
+                            ${donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Offline' && d.status === 'Completed')
+                              .reduce((sum, d) => sum + d.amount, 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Collection Points</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">3 Locations</p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Methods</p>
+                          <p className="text-sm font-medium text-[#1A1A1A]">Cash, Check</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {activeTab === 'ad-campaign' && (
+                  <Card className="bg-gradient-to-br from-[#9B87FF]/5 to-transparent">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#9B87FF] flex items-center justify-center">
+                          <Target className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1A1A1A]">Ad Campaign Donations</h3>
+                          <p className="text-sm text-[#6B6B6B]">Donations from Meta, TikTok, LinkedIn ads</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Total Amount</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">
+                            ${donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'Ad Campaign' && d.status === 'Completed')
+                              .reduce((sum, d) => sum + d.amount, 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Ad Spend</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">$2,500</p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">ROI</p>
+                          <p className="text-lg font-bold text-[#4ADE80]">3.2x</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {activeTab === 'external' && (
+                  <Card className="bg-gradient-to-br from-[#FFA500]/5 to-transparent">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#FFA500] flex items-center justify-center">
+                          <Globe className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1A1A1A]">External Website Donations</h3>
+                          <p className="text-sm text-[#6B6B6B]">Third-party platforms and partner sites</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Total Amount</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">
+                            ${donations.filter(d => d.campaign.id === selectedCampaignDetail.id && d.type === 'External' && d.status === 'Completed')
+                              .reduce((sum, d) => sum + d.amount, 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Partner Sites</p>
+                          <p className="text-lg font-bold text-[#1A1A1A]">5 Active</p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <p className="text-xs text-[#6B6B6B] mb-1">Platform Fee</p>
+                          <p className="text-sm font-medium text-[#1A1A1A]">2.5%</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Donations Table */}
+              <div>
+                <h3 className="font-bold text-[#1A1A1A] mb-4">All Donations Received</h3>
+                <div className="border border-gray-200 rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Donor</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Amount</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Type</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Method</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Status</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase">Receipt</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {donations
+                          .filter(d => d.campaign.id === selectedCampaignDetail.id && 
+                                     (activeTab === 'online' ? d.type === 'Online' :
+                                      activeTab === 'offline' ? d.type === 'Offline' :
+                                      activeTab === 'ad-campaign' ? d.type === 'Ad Campaign' :
+                                      d.type === 'External'))
+                          .map((donation) => (
+                            <tr key={donation.id} className="hover:bg-gray-50">
+                              <td className="px-4 py-3">
+                                <div>
+                                  <p className="font-medium text-[#1A1A1A] text-sm">{donation.donor.name}</p>
+                                  <p className="text-xs text-[#6B6B6B]">{donation.donor.email}</p>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <p className="font-bold text-[#1A1A1A]">${donation.amount.toLocaleString()}</p>
+                              </td>
+                              <td className="px-4 py-3">
+                                <p className="text-sm text-[#6B6B6B]">{donation.type}</p>
+                              </td>
+                              <td className="px-4 py-3">
+                                <p className="text-sm text-[#6B6B6B]">{donation.method}</p>
+                              </td>
+                              <td className="px-4 py-3">
+                                <p className="text-sm text-[#6B6B6B]">
+                                  {new Date(donation.date).toLocaleDateString()}
+                                </p>
+                              </td>
+                              <td className="px-4 py-3">
+                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${getStatusColor(donation.status)}`}>
+                                  {getStatusIcon(donation.status)}
+                                  {donation.status}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setSelectedReceipt(donation)}
+                                  className="hover:bg-[#6A5ACD]/10"
+                                >
+                                  <Receipt className="w-4 h-4 text-[#6A5ACD]" />
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Receipt Modal */}
+      {selectedReceipt && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4"
+          onClick={() => setSelectedReceipt(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Receipt Header */}
+            <div className="p-8 border-b border-gray-200">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#6A5ACD] to-[#9B87FF] flex items-center justify-center">
+                      <Receipt className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-[#1A1A1A]">Donation Receipt</h2>
+                      <p className="text-sm text-[#6B6B6B]">Tax-deductible donation</p>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedReceipt(null)}
+                  className="text-[#6B6B6B] hover:text-[#1A1A1A] text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Organization Info */}
+              <div className="bg-gray-50 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <Building2 className="w-5 h-5 text-[#6A5ACD] mt-1" />
+                  <div>
+                    <h3 className="font-bold text-[#1A1A1A] mb-1">DonorSense Foundation</h3>
+                    <p className="text-sm text-[#6B6B6B]">123 Charity Lane, Suite 100</p>
+                    <p className="text-sm text-[#6B6B6B]">New York, NY 10001</p>
+                    <p className="text-sm text-[#6B6B6B]">EIN: 12-3456789</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Receipt Body */}
+            <div className="p-8 space-y-6">
+              {/* Receipt Number & Date */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex items-center gap-2 text-[#6B6B6B] mb-1">
+                    <Hash className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase">Receipt Number</span>
+                  </div>
+                  <p className="text-lg font-bold text-[#1A1A1A] font-mono">{selectedReceipt.receipt}</p>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 text-[#6B6B6B] mb-1">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase">Date</span>
+                  </div>
+                  <p className="text-lg font-bold text-[#1A1A1A]">
+                    {new Date(selectedReceipt.date).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Donation Amount */}
+              <div className="text-center p-6 bg-gradient-to-br from-[#6A5ACD]/10 to-transparent rounded-xl border-2 border-[#6A5ACD]/20">
+                <p className="text-sm text-[#6B6B6B] mb-2">Donation Amount</p>
+                <p className="text-5xl font-bold text-[#1A1A1A] mb-1">
+                  ${selectedReceipt.amount.toLocaleString()}
+                </p>
+                <p className="text-sm text-[#6B6B6B]">{selectedReceipt.currency}</p>
+              </div>
+
+              {/* Donor Information */}
+              <div>
+                <h3 className="font-bold text-[#1A1A1A] mb-3 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-[#6A5ACD]" />
+                  Donor Information
+                </h3>
+                <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl">
+                  <div className="col-span-2">
+                    <p className="text-xs text-[#6B6B6B] mb-1">Full Name</p>
+                    <p className="font-medium text-[#1A1A1A]">{selectedReceipt.donor.name}</p>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1 text-xs text-[#6B6B6B] mb-1">
+                      <Mail className="w-3 h-3" />
+                      <span>Email</span>
+                    </div>
+                    <p className="font-medium text-[#1A1A1A] text-sm">{selectedReceipt.donor.email}</p>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1 text-xs text-[#6B6B6B] mb-1">
+                      <Phone className="w-3 h-3" />
+                      <span>Phone</span>
+                    </div>
+                    <p className="font-medium text-[#1A1A1A] text-sm">{selectedReceipt.donor.phone}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Donation Details */}
+              <div>
+                <h3 className="font-bold text-[#1A1A1A] mb-3 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-[#6A5ACD]" />
+                  Donation Details
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="text-sm text-[#6B6B6B]">Campaign</span>
+                    <span className="font-medium text-[#1A1A1A]">{selectedReceipt.campaign.name}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="text-sm text-[#6B6B6B]">Donation Type</span>
+                    <span className="font-medium text-[#1A1A1A]">{selectedReceipt.type}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="text-sm text-[#6B6B6B]">Payment Method</span>
+                    <span className="font-medium text-[#1A1A1A]">{selectedReceipt.method}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="text-sm text-[#6B6B6B]">Transaction ID</span>
+                    <span className="font-medium text-[#1A1A1A] font-mono text-xs">{selectedReceipt.transactionId}</span>
+                  </div>
+                  {selectedReceipt.frequency && (
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-[#6B6B6B]">Frequency</span>
+                      <span className="font-medium text-[#1A1A1A]">{selectedReceipt.frequency}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Tax Information */}
+              <div className="border-t border-gray-200 pt-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <h4 className="font-bold text-[#1A1A1A] mb-2">Tax Deduction Information</h4>
+                  <p className="text-sm text-[#6B6B6B] mb-3">
+                    This donation is tax-deductible to the extent allowed by law. DonorSense Foundation 
+                    is a 501(c)(3) nonprofit organization. No goods or services were provided in exchange 
+                    for this donation.
+                  </p>
+                  <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                    <span className="text-sm font-medium text-[#1A1A1A]">Tax-deductible amount:</span>
+                    <span className="text-lg font-bold text-[#1A1A1A]">${selectedReceipt.amount.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4">
+                <Button className="flex-1 bg-[#6A5ACD] hover:bg-[#5A4ABD]">
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  <Mail className="w-4 h-4" />
+                  Email Receipt
+                </Button>
+              </div>
+
+              {/* Footer Note */}
+              <div className="text-center text-xs text-[#6B6B6B] pt-4 border-t border-gray-200">
+                <p>Thank you for your generous donation!</p>
+                <p className="mt-1">For questions, contact us at donations@donorsense.org or (555) 123-4567</p>
               </div>
             </div>
           </motion.div>
