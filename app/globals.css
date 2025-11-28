@@ -1,63 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #F7F7FB;
-  --foreground: #1A1A1A;
-  --primary: #6A5ACD;
-  --primary-dark: #4E44A9;
-  --secondary: #9B87FF;
-  --accent: #C7BFFF;
-  --surface: #FFFFFF;
-  --text-primary: #1A1A1A;
-  --text-secondary: #6B6B6B;
-  --success: #4ADE80;
-  --warning: #FACC15;
-  --error: #EF4444;
+    --background: #f7f7fb;
+    --foreground: #1a1a1a;
+    --primary: #6a5acd;
+    --primary-dark: #4e44a9;
+    --secondary: #9b87ff;
+    --accent: #c7bfff;
+    --surface: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --success: #4ade80;
+    --warning: #facc15;
+    --error: #ef4444;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 * {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    background: var(--background);
+    color: var(--foreground);
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Gradient animations */
 @keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 @keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .gradient-animate {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
 }
 
 .animate-shimmer {
-  animation: shimmer 2s infinite;
+    animation: shimmer 2s infinite;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
