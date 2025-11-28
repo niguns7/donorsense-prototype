@@ -174,10 +174,6 @@ export default function DonationsPage() {
             Manage Donation Forms
           </Button>
         </Link>
-        <Button variant="outline">
-          <FileText className="w-4 h-4" />
-          View Form Data
-        </Button>
         <Link href="/ocr">
           <Button variant="outline">
             <Upload className="w-4 h-4" />
@@ -187,22 +183,22 @@ export default function DonationsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-l-4 border-l-[#6A5ACD]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <DollarSign className="w-8 h-8 text-[#6A5ACD]" />
+          <Card className="border-l-4 border-l-[#6A5ACD] h-42">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <DollarSign className="w-6 h-6 text-[#6A5ACD]" />
                 <span className="text-xs text-[#4ADE80] font-medium">+12.5%</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#1A1A1A]">
+              <h3 className="text-xl font-bold text-[#1A1A1A]">
                 ${totalDonations.toLocaleString()}
               </h3>
-              <p className="text-sm text-[#6B6B6B]">Total Donations</p>
+              <p className="text-xs text-[#6B6B6B]">Total Donations</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -212,14 +208,14 @@ export default function DonationsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-l-4 border-l-[#4ADE80]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <Users className="w-8 h-8 text-[#4ADE80]" />
+          <Card className="border-l-4 border-l-[#4ADE80] h-42">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <Users className="w-6 h-6 text-[#4ADE80]" />
                 <span className="text-xs text-[#4ADE80] font-medium">+8.3%</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#1A1A1A]">{totalDonors}</h3>
-              <p className="text-sm text-[#6B6B6B]">Unique Donors</p>
+              <h3 className="text-xl font-bold text-[#1A1A1A]">{totalDonors}</h3>
+              <p className="text-xs text-[#6B6B6B]">Unique Donors</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -229,14 +225,14 @@ export default function DonationsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-l-4 border-l-[#9B87FF]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <TrendingUp className="w-8 h-8 text-[#9B87FF]" />
+          <Card className="border-l-4 border-l-[#9B87FF] h-42">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <TrendingUp className="w-6 h-6 text-[#9B87FF]" />
                 <span className="text-xs text-[#4ADE80] font-medium">Active</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#1A1A1A]">{donations.length}</h3>
-              <p className="text-sm text-[#6B6B6B]">Total Transactions</p>
+              <h3 className="text-xl font-bold text-[#1A1A1A]">{donations.length}</h3>
+              <p className="text-xs text-[#6B6B6B]">Total Transactions</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -246,14 +242,14 @@ export default function DonationsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-l-4 border-l-[#FFA500]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <BarChart3 className="w-8 h-8 text-[#FFA500]" />
+          <Card className="border-l-4 border-l-[#FFA500] h-42">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <BarChart3 className="w-6 h-6 text-[#FFA500]" />
                 <span className="text-xs text-[#4ADE80] font-medium">+5</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#1A1A1A]">{activeCampaigns}</h3>
-              <p className="text-sm text-[#6B6B6B]">Active Campaigns</p>
+              <h3 className="text-xl font-bold text-[#1A1A1A]">{activeCampaigns}</h3>
+              <p className="text-xs text-[#6B6B6B]">Active Campaigns</p>
             </CardContent>
           </Card>
         </motion.div>
